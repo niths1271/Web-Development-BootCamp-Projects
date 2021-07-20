@@ -39,7 +39,6 @@ app.post("/compose",function(req,res){
   res.redirect("/");
 });
 
-
 app.get("/posts/:postName",function(req,res){
   const param=lodash.lowerCase(req.params.postName);
   for (var i=0;i<entries.length;i++){
@@ -54,13 +53,6 @@ app.get("/posts/:postName",function(req,res){
 app.get("/contact",function(req,res){
   res.render("contact",{contact:contactContent});
 });
-
-
-
-
-
-
-
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");
