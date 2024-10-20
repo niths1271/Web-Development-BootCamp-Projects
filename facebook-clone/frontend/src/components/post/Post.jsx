@@ -1,25 +1,50 @@
-import {useState} from "react";
-
+import {useState,useEffect,useContext} from "react";
+import axios from "axios";
 import "./post.css";
 import {MoreVert} from "@material-ui/icons";
-import {Users} from "../../dummyData";
+import {format} from "timeago.js";
+import {Link} from "react-router-dom";
+import {AuthContext} from "../../context/AuthContext";
+// import {Users} from "../../dummyData";
 
 export default function Post(props) {
-    const[like,setLike]=useState(props.post.like);
+    const [user,setUser]=useState({});
+    const[like,setLike]=useState(props.post.likes.length);
     const[isLiked,setIsLiked]=useState(false);
+    const {user:currentUser}=useContext(AuthContext);
 const PF=process.env.REACT_APP_PUBLIC_FOLDER;
     const likeHandler =()=>{
+        try{
+       const res=axios.put(`http://localhost:8000/api/posts/${props.post._id}/like`,{userId:currentUser._id});
+       console.log(res);
+        }catch(err){
+            console.log(err.response.data);
+        }
         setLike(isLiked?like-1:like+1);
         setIsLiked(!isLiked);
     }
+
+useEffect(()=>{
+    setIsLiked(props.post.likes.includes(currentUser._id));
+},[currentUser._id,props.post.likes]);
+
+    useEffect(()=>{
+        const fetchUser= async()=>{
+      const res=await axios.get(`http://localhost:8000/api/users?userId=${props.post.userId}`);
+      console.log(res);
+      setUser(res.data);
+        }
+        fetchUser();
+    },[props.post.userId]);
+
     return (
         <div className="post">
             <div className="postWrapper">
                 <div className="postTop">
                     <div className="posttopLeft">
-                        <img src={PF+Users.filter(user=>user.id===props.post.userId)[0].profilePicture} alt="" className="postProfileImg"/>
-                        <span className="postUsername">{Users.filter(user=>user.id===props.post.userId)[0].username}</span>
-                        <span className="postDate">{props.post.date}</span>
+                        <Link to={`/profile/${user.username}`} style={{textDecoration:"none"}}><img src={user.profilePicture?PF+user.profilePicture:PF+"person/noAvatar.png"} alt="" className="postProfileImg"/></Link>
+                        <span className="postUsername">{user.username}</span>
+                        <span className="postDate">{format(props.post.createdAt)}</span>
                     </div>
                     <div className="posttopRight">
                         <MoreVert/>
@@ -27,7 +52,7 @@ const PF=process.env.REACT_APP_PUBLIC_FOLDER;
                 </div>
                 <div className="postCenter">
                     <span className="postText">{props.post.desc}</span>
-                    <img src={PF+props.post.photo} alt="" className="postImg"/>
+                    <img src={PF+props.post.img} alt="" className="postImg"/>
                 </div>
                 <div className="postBottom">
                     <div className="postBottomLeft">

@@ -56,5 +56,3 @@ function CreateArea(props) {
 
 export default CreateArea;
 
-
-//  onClick={()=>{props.addNote(note,setNote,setstate)}}

@@ -5,8 +5,8 @@ const router = express.Router();
 const Note=Schemas.Note;
 
 
- router.get('/', function (req,res){  
- Note.find(function(err,notes){
+ router.get('/', async function (req,res){  
+ await Note.find(function(err,notes){
      if(err){
          console.log(err);
      }else{
@@ -16,9 +16,9 @@ const Note=Schemas.Note;
 });
 
 
-
 router.post('/createNote', async function (req,res){
-    const newNote= await new Note({
+    try{
+    const newNote= new Note({
              title:req.body.title,
              content:req.body.content,
     });  
@@ -26,21 +26,22 @@ router.post('/createNote', async function (req,res){
             if (err) res.end('Error Saving.');
             res.status(200).json("Added Note Successfully");
         });
+    }catch(err){
+        res.status(500).json(err);
+    }
    });
 
 
 
+
 router.delete('/deleteNote/:id', async function (req,res){
-    console.log(req.body);
-   await Note.findByIdAndDelete(req.params.id, function (err, docs) {
-        if (err){
-            console.log(err)
-        }
-        else{
-            console.log("Deleted : ", docs);
-            res.status(200).json("Deleted Successfully");
-        }
-    });
+    try {
+        const post = await Note.findById(req.params.id);
+             await post.deleteOne();
+             res.status(200).json("Note deleted successfully");
+   } catch (err) {
+        res.status(500).json(err);
+   }
    });
 
 

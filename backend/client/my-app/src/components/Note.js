@@ -5,7 +5,7 @@ import axios from "axios";
 function Note(props) {
 
 async function SubmitHandler(event){
-  props.onDelete(props.id);
+  console.log(event);
   event.preventDefault();
   try{
        const response=await axios.delete(`/api/deleteNote/${props.id}`);
@@ -13,6 +13,7 @@ async function SubmitHandler(event){
   }catch(err){
        console.log(err);
   }
+  props.onDelete(props.id);
 }
 
   return (

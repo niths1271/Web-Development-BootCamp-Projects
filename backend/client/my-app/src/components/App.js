@@ -10,6 +10,7 @@ function App() {
 var [notes,setNotes]=useState([]);
 
 useEffect(() => {
+  console.log("csdsf");
   async function fetchMyAPI() {
     try{
     let response = await axios.get('/api');
@@ -19,14 +20,14 @@ useEffect(() => {
       console.error('err',err);
     }
   }
-  fetchMyAPI()
+  fetchMyAPI();
 }, []);
 
 function addNote(note,setNote,setstate){
   setNotes((prevValue)=>{
   return([...prevValue,note]);
   });
-  setNote({title:" ",content:" "});
+  setNote({title:"",content:""});
   setstate(false);
   }
   

@@ -19,7 +19,7 @@ const userSchema=new mongoose.Schema({
           required:true,
           min:6,
      },
-     profilePicture:{
+     coverPicture:{
           type:String,
           default:""
      },
@@ -47,7 +47,7 @@ const userSchema=new mongoose.Schema({
           type:String,
           max:20,
      },
-     city:{
+     from:{
           type:String,
           max:20,
      },
